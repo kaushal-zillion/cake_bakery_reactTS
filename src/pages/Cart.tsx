@@ -8,7 +8,7 @@ const Cart = () => {
             <Header />
             <div className="shop-bg relative overflow-hidden">
                 <div className="text-white flex justify-center h-[70%] items-center flex-col relative z-10">
-                    <h2 className="text-8xl mb-5 font-bold">Cart</h2>
+                    <h2 className="text-6xl md:text-8xl mb-5 font-bold">Cart</h2>
                     <p className="text-lg">Your Shopping Cart</p>
                 </div>
                 <div className="absolute ele-shape scale-y-[-1]" aria-hidden="true" data-negative="false">
@@ -21,7 +21,7 @@ const Cart = () => {
                 <div className="container mx-auto">
                     <div className="flex flex-wrap gap-6 xl:gap-0">
                         <div className="xl:w-8/12 w-full px-4">
-                            <div className=" border border-gray-200 p-6">
+                            <div className=" border border-gray-200 p-6 overflow-x-auto">
                                 <table className="w-full ">
                                     <thead>
                                         <tr>

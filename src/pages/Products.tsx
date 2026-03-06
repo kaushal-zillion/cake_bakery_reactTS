@@ -1,13 +1,21 @@
 import Header from "../components/Header"
 import Footer from "../components/Footer"
+import { useProducts } from "../context/ProductProvider";
 
-const  Products = () => {
+
+const Products = () => {
+    const { products, loading } = useProducts();
+
+    if (loading) {
+        return <div className="flex justify-center items-center h-screen">Loading...</div>
+    }
+
     return (
         <section>
             <Header />
             <div className="shop-bg relative overflow-hidden">
                 <div className="text-white flex justify-center h-[70%] items-center flex-col relative z-10">
-                    <h2 className="text-8xl mb-5 font-bold">Shop</h2>
+                    <h2 className="text-6xl md:text-8xl mb-5 font-bold">Shop</h2>
                     <p className="text-lg">Shop for delicious cakes and pastries</p>
                 </div>
                 <div className="absolute ele-shape scale-y-[-1]" aria-hidden="true" data-negative="false">
@@ -19,21 +27,23 @@ const  Products = () => {
             <div className="product-bg py-24">
                 <div className="container mx-auto">
                     <div className="flex flex-wrap">
-                        <div className="w-4/12 px-4">
-                            <div>
-                                <div>
-                                    <img src="https://www.nicdarkthemes.com/bakery/wp-content/uploads/2025/06/ndimg-product-04-300x300.jpg" alt="reference image of puf" width="100%" />
-                                </div>
-                                <div className="p-4">
-                                    <h6 className="pb-3 text-2xl capitalize">Puff Pastry</h6>
-                                    <p className="pb-4 text-gray-500">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.</p>
-                                    <div className="flex justify-between items-center">
-                                        <p className="font-bold text-lg">$10.00</p>
-                                        <button className="add-to-cart-btn"><span className="relative z-10">Add to Cart</span></button>
+                        {products.map((product) => (
+                            <div className="w-full md:w-4/12 px-4 h-full" key={product._id}>
+                                <div className="h-full border mb-8 p-4">
+                                    <div className="product-img mx-auto">
+                                        <img src={product.photos[1].secure_url} alt={product.name} width="100%" />
+                                    </div>
+                                    <div>
+                                        <h6 className="pb-3 text-2xl capitalize">{product.name}</h6>
+                                        <p className="pb-4 text-gray-500">{product.description}</p>
+                                        <div className="flex justify-between items-center">
+                                            <p className="font-bold text-lg">${product.price}</p>
+                                            <button className="add-to-cart-btn"><span className="relative z-10">Add to Cart</span></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </div>

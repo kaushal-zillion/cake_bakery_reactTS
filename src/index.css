@@ -14,6 +14,11 @@
     transition: .3s all ease-in-out;
 }
 
+.logout-btn,
+.login-btn {
+    @apply bg-transparent px-10 capitalize py-2 border border-primary relative overflow-hidden;
+    transition: .3s all ease-in-out;
+}
 
 /* home */
 .hero-bg {
@@ -69,7 +74,7 @@
 
 .product-bg {
     background-image: url("/images/white-bg.jpg");
-    @apply bg-cover;
+    @apply bg-cover bg-fixed;
 }
 
 .add-to-cart-btn {
@@ -77,6 +82,19 @@
     transition: .3s all ease-in-out;
 }
 
+.product-img {
+    width: 200px;
+    height: 200px;
+    @apply overflow-hidden flex justify-center items-center rounded-full mb-6;
+}
+
+.product-img img {
+    @apply object-cover h-full transition-all duration-300 ease-in-out;
+}
+
+.product-img:hover img {
+    @apply scale-110;
+}
 
 /* cart and add to cart button hover effect */
 .add-to-cart-btn::before,
@@ -119,8 +137,46 @@
 }
 
 .glass-morphism {
-    /* From https://css.glass */
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10.5px);
     -webkit-backdrop-filter: blur(10.5px);
+}
+
+/* login */
+
+.login-bg {
+    background-image: url("/images/footer-bg.jpg");
+    @apply h-screen relative flex justify-center items-center
+}
+
+.login-bg::before {
+    @apply absolute inset-0;
+    content: "";
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.596) 70%, rgba(0, 0, 0, 0.699) 80%);
+}
+
+.form-bg {
+    background-image: url("/images/white-bg.jpg");
+    animation: fadeIn .2s ease-in-out 0s 1 normal none running;
+    @apply relative z-10 p-4 md:p-10 bg-cover bg-left rounded-2xl flex justify-center items-center transition-all duration-300 ease-in-out;
+}
+
+form input {
+    @apply mb-5 py-4 px-8 border-2
+}
+
+form input:focus {
+    @apply border-primary outline-none
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
