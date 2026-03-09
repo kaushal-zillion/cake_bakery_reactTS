@@ -26,7 +26,9 @@ const ProductProvider = ({ children }: { children: React.ReactNode }) => {
       if (response.status === 200) {
         setLoading(false);
       } else {
-        toast.error("Failed to fetch products");
+        toast.error("Failed to fetch products", {
+          style: { background: '#dc2626', color: 'white' },
+        });
         setLoading(false);
       }
     }

@@ -10,7 +10,19 @@ import ProtectedRoute from "./components/ProtectedRoute"
 const App = () => {
   return (
     <BrowserRouter>
-      <Toaster />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#c19b77',
+            color: 'white',
+            fontWeight: '500',
+            borderRadius: '8px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+          },
+        }}
+      />
       <Routes>
         <Route path="/" element={<Home />} />
 

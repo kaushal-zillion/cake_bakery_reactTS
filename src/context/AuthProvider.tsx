@@ -24,8 +24,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             if (res.data.success) {
                 localStorage.setItem("token", res.data.sign_in)
-                localStorage.setItem("cake_bakery_user", JSON.stringify({ email, name: res.data.user.name }))
-                toast.success("Signed in successfully", { position: "top-right" });
+                localStorage.setItem("cake_bakery_user", JSON.stringify({ user: res.data.user }))
+                toast.success("Signed in successfully", {});
                 setLoading(false);
                 return true;
             } else {
@@ -34,7 +34,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
         } catch (error) {
             console.log(error);
-            toast.error("Sign in failed", { position: "top-right" });
+            toast.error("Sign in failed", {
+              style: { background: '#dc2626', color: 'white' },
+            });
             setLoading(false);
             return false;
         }
@@ -53,7 +55,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
         } catch (error) {
             console.log(error);
-            toast.error("Sign up failed", { position: "top-right" });
+            toast.error("Sign up failed", {
+              style: { background: '#dc2626', color: 'white' },
+            });
             setLoading(false);
             return false;
         }
@@ -61,6 +65,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const signOut = () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("cake_bakery_user");
     }
 
     return (

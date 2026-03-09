@@ -1,8 +1,13 @@
-import { FaTrash } from "react-icons/fa"
+import { FaMinus, FaPlus, FaTrash } from "react-icons/fa"
 import Footer from "../components/Footer"
 import Header from "../components/Header"
+import { useCart } from "../context/CartProvider";
 
 const Cart = () => {
+
+    const { cart, increaseQuantity, decreaseQuantity, removeFromCart, handleCheckout } = useCart();
+    // console.log(cart);
+
     return (
         <section>
             <Header />
@@ -19,55 +24,69 @@ const Cart = () => {
             </div>
             <div className="product-bg py-24">
                 <div className="container mx-auto">
-                    <div className="flex flex-wrap gap-6 xl:gap-0">
-                        <div className="xl:w-8/12 w-full px-4">
-                            <div className=" border border-gray-200 p-6 overflow-x-auto">
-                                <table className="w-full ">
-                                    <thead>
-                                        <tr>
-                                            <th className="text-center"></th>
-                                            <th className="text-center">Name</th>
-                                            <th className="text-center">Price</th>
-                                            <th className="text-center">Quantity</th>
-                                            <th className="text-center">Subtotal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr className="border-t">
-                                            <td className="flex items-center gap-5 py-6">
-                                                <button className="p-5 border"><FaTrash /></button>
-                                                <img src="https://www.nicdarkthemes.com/bakery/wp-content/uploads/2025/06/ndimg-product-03-300x300.jpg" alt="Cake" width={100} />
-                                            </td>
-                                            <td className="text-center py-6">classic cake</td>
-                                            <td className="text-center py-6">$10</td>
-                                            <td className="text-center py-6">
-                                                <input type="number" defaultValue={1} className="w-20 px-2 border" />
-                                            </td>
-                                            <td className="text-center py-6">$10</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                    {cart.length === 0 ? (
+                        <div className="text-center py-20">
+                            <h2 className="text-3xl font-bold mb-4">Your cart is empty</h2>
+                            <p className="text-lg">Browse our products and add some delicious treats to your cart!</p>
+                        </div>
+                    ) : (
+                        <div className="flex flex-wrap gap-6 xl:gap-0">
+                            <div className="xl:w-8/12 w-full px-4">
+                                <div className=" border border-gray-200 p-6 overflow-x-auto">
+                                    <table className="w-full ">
+                                        <thead>
+                                            <tr>
+                                                <th className="text-center"></th>
+                                                <th className="text-center">Name</th>
+                                                <th className="text-center">Price</th>
+                                                <th className="text-center">Quantity</th>
+                                                <th className="text-center">Subtotal</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {cart.map(item => (
+                                                <tr key={item._id} className="border-t">
+                                                    <td className="flex items-center gap-5 py-6">
+                                                        <button className="p-5 border" onClick={() => removeFromCart(item._id)}><FaTrash /></button>
+                                                        <img src={item.photos[0].secure_url} alt={item.name} width={100} className="h-24" />
+                                                    </td>
+                                                    <td className="text-center py-6">{item.name}</td>
+                                                    <td className="text-center py-6">${item.price}</td>
+                                                    <td className="text-center py-6">
+                                                        <button className="p-2 border" onClick={() => decreaseQuantity(item._id)}><FaMinus /></button>
+                                                        <span className="mx-2">{item.quantity}</span>
+                                                        <button className="p-2 border" onClick={() => increaseQuantity(item._id)}><FaPlus /></button>
+                                                    </td>
+                                                    <td className="text-center py-6">${item.price * item.quantity}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            {/* Order Summary */}
+                            <div className="xl:w-4/12 w-full px-4">
+                                <div className="border border-gray-200 p-6 sticky top-28">
+                                    <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
+                                    <div className="flex justify-between mb-4">
+                                        <p>Subtotal</p>
+                                        <p>${cart.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2)}</p>
+                                    </div>
+                                    <div className="flex justify-between mb-4">
+                                        <p>Shipping</p>
+                                        <p>$5</p>
+                                    </div>
+                                    <div className="flex justify-between mb-4">
+                                        <p className="font-bold text-2xl">Total</p>
+                                        <p className="font-bold text-2xl">${(cart.reduce((total, item) => total + (item.price * item.quantity), 0) + 5).toFixed(2)}</p>
+                                    </div>
+                                    <button className="add-to-cart-btn w-full" onClick={handleCheckout}>
+                                        <span className="relative z-10">Proceed to Checkout</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div className="xl:w-4/12 w-full px-4 ">
-                            <div className="border border-gray-200 p-6">
-                                <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
-                                <div className="flex justify-between mb-4">
-                                    <p>Subtotal</p>
-                                    <p>$10</p>
-                                </div>
-                                <div className="flex justify-between mb-4">
-                                    <p>Shipping</p>
-                                    <p>$5</p>
-                                </div>
-                                <div className="flex justify-between mb-4">
-                                    <p className="font-bold text-2xl">Total</p>
-                                    <p className="font-bold text-2xl">$16</p>
-                                </div>
-                                <button className="add-to-cart-btn w-full"><span className="relative z-10">Proceed to Checkout</span></button>
-                            </div>
-                        </div>
-                    </div>
+                    )}
                 </div>
             </div>
             <div>

@@ -1,10 +1,12 @@
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 import { useProducts } from "../context/ProductProvider";
+import { useCart } from "../context/CartProvider";
 
 
 const Products = () => {
     const { products, loading } = useProducts();
+    const { addToCart, cart, alreadyInCart } = useCart();
 
     if (loading) {
         return <div className="flex justify-center items-center h-screen">Loading...</div>
@@ -38,7 +40,9 @@ const Products = () => {
                                         <p className="pb-4 text-gray-500">{product.description}</p>
                                         <div className="flex justify-between items-center">
                                             <p className="font-bold text-lg">${product.price}</p>
-                                            <button className="add-to-cart-btn"><span className="relative z-10">Add to Cart</span></button>
+                                            <button className={`${alreadyInCart(product._id) ? "border-primary border-2 px-6 py-2" : "add-to-cart-btn"}`} disabled={alreadyInCart(product._id)} onClick={() => addToCart(product)}>
+                                                <span className="relative z-10">{alreadyInCart(product._id) ? "Already in Cart" : "Add to Cart"}</span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

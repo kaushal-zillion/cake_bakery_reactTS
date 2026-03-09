@@ -2,6 +2,7 @@ import { Link, NavLink } from "react-router-dom"
 import { useAuth } from "../context/AuthProvider"
 import { useEffect, useState } from "react"
 import { HashLink } from 'react-router-hash-link';
+import { TiShoppingCart } from "react-icons/ti";
 
 const Header = () => {
     const { signOut } = useAuth();
@@ -40,7 +41,7 @@ const Header = () => {
                             <div className="hidden md:flex">
                                 <Link to="/cart" className="cart-btn">
                                     <span className="relative z-10 capitalize" >
-                                        cart
+                                        <TiShoppingCart className="text-xl" />
                                     </span>
                                 </Link>
                                 <Link to="/signin" className="logout-btn ms-4" onClick={() => {

@@ -1,4 +1,4 @@
-import type { Product } from "./product.type";
+import type { CartItem, Product } from "./product.type";
 
 export interface ProductContextType {
     products: Product[];
@@ -6,9 +6,14 @@ export interface ProductContextType {
 }
 
 export interface CartContextType {
-    cart: Product[];
+    cart: CartItem[];
     loading: boolean;
     addToCart: (product: Product) => void;
+    alreadyInCart: (productId: string) => boolean;
+    increaseQuantity: (productId: string) => void;
+    decreaseQuantity: (productId: string) => void;
+    removeFromCart: (productId: string) => void;
+    handleCheckout: () => void;
 }
 
 export interface AuthContextType {

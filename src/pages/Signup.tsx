@@ -11,7 +11,9 @@ const Signup = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (Object.values(input).some((val) => val.trim() === "")) {
-            return toast.error("Please fill all the fields", { position: "top-right" });
+            return toast.error("Please fill all the fields", {
+              style: { background: '#dc2626', color: 'white' },
+            });
         }
 
         const success = await signUp(input.name, input.email, input.password)
@@ -21,12 +23,11 @@ const Signup = () => {
         }
     }
 
-
     return (
         <section className="login-bg">
             <div className="form-bg relative">
-                <h2 className="absolute left-4 md:left-[30px] top-[-35px] text-primary font-serif uppercase font-bold text-4xl md:text-6xl">sign up</h2>
                 <form onSubmit={handleSubmit}>
+                    <h2 className="text-primary font-serif uppercase font-bold text-4xl md:text-6xl mb-8">sign up</h2>
                     <div>
                         <label htmlFor="name" className="block mb-3">Name</label>
                         <input value={input.name} onChange={(e) => setInput({ ...input, name: e.target.value })} type="text" name="name" id="name" placeholder="John Doe" />

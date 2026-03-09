@@ -22,8 +22,8 @@ const SignIn = () => {
     return (
         <section className="login-bg">
             <div className="form-bg relative">
-                <h2 className="absolute left-4 md:left-[30px] top-[-35px] text-primary font-serif uppercase font-bold text-4xl md:text-6xl">sign in</h2>
                 <form onSubmit={handleSubmit}>
+                <h2 className="text-primary font-serif uppercase font-bold text-4xl md:text-6xl mb-8">sign in</h2>
                     <div>
                         <label htmlFor="email" className="block mb-3">Email</label>
                         <input value={input.email} onChange={(e) => setInput({ ...input, email: e.target.value })} type="email" name="email" id="email" placeholder="example@mail.com" />

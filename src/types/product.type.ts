@@ -1,3 +1,4 @@
+import Cart from '../pages/Cart';
 export interface ImageData {
     imageType: string;
     imageName: string;
@@ -39,4 +40,20 @@ export interface Product {
 export interface ApiResponse {
     success: boolean;
     products: Product[];
+}
+
+export interface CartItem {
+    _id: string;
+    name: string;
+    price: number;
+    description: string;
+    stock: number;
+    sold: number;
+    category: Category;
+    user: string;
+    photos: Photo[];
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+    quantity: number;
 }
