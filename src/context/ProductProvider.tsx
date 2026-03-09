@@ -2,6 +2,7 @@ import axios from "axios"
 import { createContext, useContext, useEffect, useState } from "react"
 import type { ApiResponse, Product } from "../types/product.type"
 import type { ProductContextType } from "../types/context.type"
+import toast from "react-hot-toast";
 
 const ProductContext = createContext<ProductContextType | null>(null);
 export const useProducts = () => {
@@ -22,7 +23,12 @@ const ProductProvider = ({ children }: { children: React.ReactNode }) => {
     const fetchProducts = async () => {
       const response = await axios.get<ApiResponse>(`${import.meta.env.VITE_API_BASE_URL}/product/get`)
       setProducts(response.data.products)
-      setLoading(false);
+      if (response.status === 200) {
+        setLoading(false);
+      } else {
+        toast.error("Failed to fetch products");
+        setLoading(false);
+      }
     }
     fetchProducts();
   }, [])
