@@ -2,11 +2,33 @@ import { FaMinus, FaPlus, FaTrash } from "react-icons/fa"
 import Footer from "../components/Footer"
 import Header from "../components/Header"
 import { useCart } from "../context/CartProvider";
+import { useState } from "react";
+import type { ShippingDetails } from "../types/context.type";
+import toast from "react-hot-toast";
 
 const Cart = () => {
 
     const { cart, increaseQuantity, decreaseQuantity, removeFromCart, handleCheckout } = useCart();
-    // console.log(cart);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [shipping, setShipping] = useState<ShippingDetails>({
+        address: '',
+        city: '',
+        phoneNo: '',
+        postalCode: '',
+        state: ''
+    });
+
+    const handlePayment = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (Object.values(shipping).some(value => value.trim() === '')) {
+            toast.error("All the fields required..!");
+            return;
+        }
+
+        handleCheckout(shipping);
+        setModalOpen(false);
+    };
 
     return (
         <section>
@@ -31,6 +53,7 @@ const Cart = () => {
                         </div>
                     ) : (
                         <div className="flex flex-wrap gap-6 xl:gap-0">
+                            {/* cart items */}
                             <div className="xl:w-8/12 w-full px-4">
                                 <div className=" border border-gray-200 p-6 overflow-x-auto">
                                     <table className="w-full ">
@@ -80,7 +103,7 @@ const Cart = () => {
                                         <p className="font-bold text-2xl">Total</p>
                                         <p className="font-bold text-2xl">${(cart.reduce((total, item) => total + (item.price * item.quantity), 0) + 5).toFixed(2)}</p>
                                     </div>
-                                    <button className="add-to-cart-btn w-full" onClick={handleCheckout}>
+                                    <button className="add-to-cart-btn w-full" onClick={() => setModalOpen(true)}>
                                         <span className="relative z-10">Proceed to Checkout</span>
                                     </button>
                                 </div>
@@ -92,6 +115,40 @@ const Cart = () => {
             <div>
                 <Footer />
             </div>
+            {/* Shipping Modal */}
+            {modalOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="bg-white p-6 rounded-lg w-full max-w-md mx-4 animate-fadeIn">
+                        <h2 className="text-2xl font-bold mb-4">Shipping Details</h2>
+                        <form onSubmit={handlePayment}>
+                            <div className="mb-4">
+                                <label htmlFor="address" className="block text-sm font-medium mb-1">Address*</label>
+                                <input type="text" id="address" name="address" value={shipping.address} onChange={(e) => setShipping({ ...shipping, address: e.target.value })} className="w-full p-2 border border-gray-300 rounded" required />
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="city" className="block text-sm font-medium mb-1">City*</label>
+                                <input type="text" id="city" name="city" value={shipping.city} onChange={(e) => setShipping({ ...shipping, city: e.target.value })} className="w-full p-2 border border-gray-300 rounded" required />
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="phoneNo" className="block text-sm font-medium mb-1">Phone Number*</label>
+                                <input type="number" id="phoneNo" name="phoneNo" value={shipping.phoneNo} onChange={(e) => setShipping({ ...shipping, phoneNo: e.target.value })} className="w-full p-2 border border-gray-300 rounded" required />
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="postalCode" className="block text-sm font-medium mb-1">Postal Code*</label>
+                                <input type="number" id="postalCode" name="postalCode" value={shipping.postalCode} onChange={(e) => setShipping({ ...shipping, postalCode: e.target.value })} className="w-full p-2 border border-gray-300 rounded" required />
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="state" className="block text-sm font-medium mb-1">State*</label>
+                                <input type="text" id="state" name="state" value={shipping.state} onChange={(e) => setShipping({ ...shipping, state: e.target.value })} className="w-full p-2 border border-gray-300 rounded" required />
+                            </div>
+                            <div className="flex justify-end gap-4">
+                                <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+                                <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Proceed to Payment</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </section>
     )
 }

@@ -27,13 +27,14 @@ const Header = () => {
             <div className="container mx-auto px-4">
                 <div className="flex justify-between items-center">
                     <Link to="/">
-                        <img src="/images/logo.png" alt="logo" className="w-40 md:w-60" />
+                        <img src="/images/logo.png" alt="logo" className="w-40 lg:w-60" />
                     </Link>
                     <nav className="hidden md:block">
                         <ul className="flex gap-2 md:gap-6">
                             <li><NavLink to="/" className={({ isActive }) => isActive ? "text-primary" : ""}>Home</NavLink></li>
                             <li><HashLink smooth to="/#about" className="hover:text-primary transition-colors">About</HashLink></li>
                             <li><NavLink to="/shop" className={({ isActive }) => isActive ? "text-primary" : ""}>Shop</NavLink></li>
+                            {isLoggedIn && <li><NavLink to="/my-orders" className={({ isActive }) => isActive ? "text-primary" : ""}>Orders</NavLink></li>}
                         </ul>
                     </nav>
                     <div className="flex items-center gap-4">
@@ -69,6 +70,7 @@ const Header = () => {
                                 <li><NavLink to="/" className={({ isActive }) => isActive ? "text-primary" : ""} onClick={() => setIsMenuOpen(false)}>Home</NavLink></li>
                                 <li><HashLink smooth to="/#about" className="hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>About</HashLink></li>
                                 <li><NavLink to="/shop" className={({ isActive }) => isActive ? "text-primary" : ""} onClick={() => setIsMenuOpen(false)}>Shop</NavLink></li>
+                                {isLoggedIn && <li><NavLink to="/my-orders" className={({ isActive }) => isActive ? "text-primary" : ""} onClick={() => setIsMenuOpen(false)}>Orders</NavLink></li>}
                                 {isLoggedIn ? (
                                     <>
                                         <li><Link to="/cart" className="cart-btn inline-block" onClick={() => setIsMenuOpen(false)}>

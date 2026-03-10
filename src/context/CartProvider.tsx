@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import type { CartContextType } from "../types/context.type";
+import type { CartContextType, ShippingDetails } from "../types/context.type";
 import type { CartItem, Product } from "../types/product.type";
 import toast from "react-hot-toast";
 import { loadRazorPayScript } from "../utils/loadRazorPay";
@@ -47,9 +47,7 @@ const CartProvider = ({ children }: { children: React.ReactNode }) => {
         setCart((prevCart) => prevCart.map(item => {
             if (item._id === productId) {
                 if (item.quantity >= item.stock) {
-                    toast.error("Maximum quantity reached!", {
-                        style: { background: '#dc2626', color: 'white' },
-                    });
+                    toast.error("Maximum quantity reached!");
                     return { ...item, quantity: item.stock };
                 }
                 return { ...item, quantity: item.quantity + 1 };
@@ -71,7 +69,7 @@ const CartProvider = ({ children }: { children: React.ReactNode }) => {
         setCart((prevCart) => prevCart.filter(item => item._id !== productId));
     }
 
-    const handleCheckout = async () => {
+    const handleCheckout = async (shipping: ShippingDetails) => {
         const { user } = JSON.parse(localStorage.getItem("cake_bakery_user") || "{}");
         const token = localStorage.getItem("token");
         const totalAmount = cart.reduce((total, item) => total + (item.price * item.quantity), 0) + 5;
@@ -80,17 +78,21 @@ const CartProvider = ({ children }: { children: React.ReactNode }) => {
             const res = await loadRazorPayScript("https://checkout.razorpay.com/v1/checkout.js");
 
             if (!res) {
-                toast.error("Failed to load Razorpay script. Please try again.", {
-                    style: { background: '#dc2626', color: 'white' },
-                });
+                toast.error("Failed to load Razorpay script. Please try again.");
                 return;
             }
 
             const paymentRes = await axios.post(
                 `${import.meta.env.VITE_API_BASE_URL}/order/create/payment/${user._id}`,
-                { totalAmount },
+                {
+                    shippingInfo: shipping,
+                    orderItems: cart.map(item => ({ productId: item._id, quantity: item.quantity, price: item.price })),
+                    totalAmount: totalAmount,
+                },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
+
+            console.log(paymentRes.data);
 
             const options = {
                 key: import.meta.env.VITE_RAZORPAY_KEY,
@@ -98,12 +100,40 @@ const CartProvider = ({ children }: { children: React.ReactNode }) => {
                 currency: "INR",
                 name: "Cake Bakery",
                 description: "Order Payment",
-                order_id: paymentRes.data.id,
-                handler: function (response: any) {
-                    console.log(response);
-                    setCart([]);
-                    toast.success("Checkout successful!", {
-                    });
+                order_id: paymentRes.data.payment.id,
+                handler: async function (response: any) {
+
+                    try {
+                        const orderData = {
+                            shippingInfo: shipping,
+                            orderItems: cart.map(item => ({ productId: item._id, quantity: item.quantity, price: item.price })),
+                            totalAmount: totalAmount,
+                            paymentInfo: {
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_signature: response.razorpay_signature,
+                            }
+                        }
+
+                        console.log(response);
+
+                        const orderRes = await axios.post(
+                            `${import.meta.env.VITE_API_BASE_URL}/order/create/${user._id}`,
+                            orderData,
+                            { headers: { Authorization: `Bearer ${token}` } }
+                        );
+
+                        if (orderRes.status === 200) {
+                            toast.success("Order placed successfully!");
+                            setCart([]);
+                        } else {
+                            toast.error("Payment succeeded but failed to create order. Please contact support.");
+                        }
+
+                    } catch (error) {
+                        console.log(error);
+                        toast.error("Payment succeeded but failed to create order. Please contact support.");
+                    }
                 },
                 prefill: {
                     name: user?.name || "",

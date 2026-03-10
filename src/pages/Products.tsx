@@ -30,7 +30,7 @@ const Products = () => {
                 <div className="container mx-auto">
                     <div className="flex flex-wrap">
                         {products.map((product) => (
-                            <div className="w-full md:w-4/12 px-4 h-full" key={product._id}>
+                            <div className="w-full md:w-6/12 lg:w-4/12 px-4 h-full" key={product._id}>
                                 <div className="h-full border mb-8 p-4">
                                     <div className="product-img mx-auto">
                                         <img src={product.photos[1].secure_url} alt={product.name} width="100%" />

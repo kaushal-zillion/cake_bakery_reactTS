@@ -11,9 +11,7 @@ const Signup = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (Object.values(input).some((val) => val.trim() === "")) {
-            return toast.error("Please fill all the fields", {
-              style: { background: '#dc2626', color: 'white' },
-            });
+            return toast.error("Please fill all the fields");
         }
 
         const success = await signUp(input.name, input.email, input.password)
