@@ -1,4 +1,3 @@
-import Cart from '../pages/Cart';
 export interface ImageData {
     imageType: string;
     imageName: string;

@@ -7,7 +7,7 @@ import { ClipLoader } from "react-spinners";
 
 const Products = () => {
     const { products, loading } = useProducts();
-    const { addToCart, cart, alreadyInCart } = useCart();
+    const { addToCart, alreadyInCart } = useCart();
 
     if (loading) {
         return <div className="flex justify-center items-center h-screen"><ClipLoader color="#c19b77" size={50} /></div>

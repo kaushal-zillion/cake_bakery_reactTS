@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext } from "react"
 import type { AuthContextType } from "../types/context.type"
 import axios from "axios"
 import type { UserResponse } from "../types/user.type"
