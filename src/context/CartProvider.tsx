@@ -19,7 +19,7 @@ export const useCart = () => {
 
 const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const [cart, setCart] = useState<CartItem[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const cart = localStorage.getItem('bakery_cart');
@@ -70,6 +70,7 @@ const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const handleCheckout = async (shipping: ShippingDetails) => {
+        setLoading(true);
         const { user } = JSON.parse(localStorage.getItem("cake_bakery_user") || "{}");
         const token = localStorage.getItem("token");
         const totalAmount = cart.reduce((total, item) => total + (item.price * item.quantity), 0) + 5;
@@ -78,6 +79,7 @@ const CartProvider = ({ children }: { children: React.ReactNode }) => {
             const res = await loadRazorPayScript("https://checkout.razorpay.com/v1/checkout.js");
 
             if (!res) {
+                setLoading(false);
                 toast.error("Failed to load Razorpay script. Please try again.");
                 return;
             }
@@ -115,7 +117,7 @@ const CartProvider = ({ children }: { children: React.ReactNode }) => {
                             }
                         }
 
-                        console.log(response);
+                        // console.log(response);
 
                         const orderRes = await axios.post(
                             `${import.meta.env.VITE_API_BASE_URL}/order/create/${user._id}`,
@@ -133,6 +135,14 @@ const CartProvider = ({ children }: { children: React.ReactNode }) => {
                     } catch (error) {
                         console.log(error);
                         toast.error("Payment succeeded but failed to create order. Please contact support.");
+                    } finally {
+                        setLoading(false);
+                    }
+
+                },
+                modal: {
+                    ondismiss: function () {
+                        setLoading(false);
                     }
                 },
                 prefill: {
@@ -146,6 +156,7 @@ const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
         } catch (error) {
             console.log(error);
+            setLoading(false);
         }
     }
 

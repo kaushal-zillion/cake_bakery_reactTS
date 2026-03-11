@@ -119,6 +119,46 @@
     color: black;
 }
 
+.cart-btn span:last-child {
+    transition: all 0.3s ease-in-out;
+}
+
+.user-menu-content {
+    @apply flex flex-col gap-0 absolute top-[57px] right-0 bg-white shadow-lg opacity-0 invisible rounded-lg overflow-hidden;
+    transition: all 0.3s ease-in-out;
+    animation: fadeInMenu 0.3s ease-in-out forwards;
+    animation-play-state: paused;
+}
+
+.user-menu:hover .user-menu-content {
+    @apply opacity-100 visible;
+    animation-play-state: running;
+}
+
+.user-menu-item {
+    @apply flex items-center gap-3 px-4 py-3 text-gray-700 transition-all duration-200 hover:bg-gray-50;
+}
+
+.user-menu-item:first-child {
+    @apply border-b border-gray-200;
+}
+
+@keyframes fadeInMenu {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cart-btn:hover span:last-child {
+    color: black;
+}
+
 .animate-fadeIn {
     animation: fadeIn .3s linear forwards;
     /* Shorthand is cleaner */
@@ -226,4 +266,18 @@ form input:focus {
 /* 4. Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #2563eb;
+}
+
+
+@media (max-width:992px) {
+    .hero-bg {
+        background-size: cover;
+        background-position: center;
+    }
+}
+@media (max-width:576px) {
+    .hero-bg {
+        background-size: cover;
+        background-position: -640px;
+    }
 }

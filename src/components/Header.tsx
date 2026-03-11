@@ -3,11 +3,17 @@ import { useAuth } from "../context/AuthProvider"
 import { useEffect, useState } from "react"
 import { HashLink } from 'react-router-hash-link';
 import { TiShoppingCart } from "react-icons/ti";
+import { useCart } from "../context/CartProvider";
+import { RiUserSettingsFill } from "react-icons/ri";
+import { TbLockPassword, TbLogout } from "react-icons/tb";
 
 const Header = () => {
     const { signOut } = useAuth();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { cart } = useCart();
+
+    const { user } = JSON.parse(localStorage.getItem("cake_bakery_user") || "{}");
 
     useEffect(() => {
         const token = localStorage.getItem("token")
@@ -32,30 +38,69 @@ const Header = () => {
                     <nav className="hidden md:block">
                         <ul className="flex gap-2 md:gap-6">
                             <li><NavLink to="/" className={({ isActive }) => isActive ? "text-primary" : ""}>Home</NavLink></li>
-                            <li><HashLink smooth to="/#about" className="hover:text-primary transition-colors">About</HashLink></li>
+                            <li><HashLink smooth to="/#about">About</HashLink></li>
                             <li><NavLink to="/shop" className={({ isActive }) => isActive ? "text-primary" : ""}>Shop</NavLink></li>
                             {isLoggedIn && <li><NavLink to="/my-orders" className={({ isActive }) => isActive ? "text-primary" : ""}>Orders</NavLink></li>}
                         </ul>
                     </nav>
                     <div className="flex items-center gap-4">
+
                         {isLoggedIn ? (
-                            <div className="hidden md:flex">
-                                <Link to="/cart" className="cart-btn">
-                                    <span className="relative z-10 capitalize" >
-                                        <TiShoppingCart className="text-xl" />
-                                    </span>
-                                </Link>
-                                <Link to="/signin" className="logout-btn ms-4" onClick={() => {
-                                    signOut()
-                                }}>
-                                    Logout
-                                </Link>
-                            </div>
+                            <>
+                                <div className="hidden md:flex">
+                                    <Link to="/cart" className="cart-btn relative">
+                                        <span className="relative z-10 capitalize" >
+                                            <TiShoppingCart className="text-xl mt-2" />
+                                        </span>
+                                        <span className="absolute top-[2px] right-[32px] z-10 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{cart.length}</span>
+                                    </Link>
+                                </div>
+                                <div className="relative hidden md:block user-menu">
+                                    <div className="w-10 h-10 rounded-full border flex justify-center items-center cursor-pointer">
+                                        <RiUserSettingsFill className="text-xl text-gray-800" />
+                                    </div>
+                                    <div className="user-menu-content w-64 rounded-xl border border-gray-100 bg-white shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+                                        {/* 1. Profile Header Section */}
+                                        <div className="bg-gray-50/50 p-5 border-b border-gray-100">
+                                            <h6 className="text-sm font-bold text-gray-900 truncate uppercase tracking-tight">
+                                                {user?.name || "Guest User"}
+                                            </h6>
+                                            <p className="text-xs text-gray-500 truncate mt-0.5">
+                                                {user?.email}
+                                            </p>
+                                        </div>
+                                        <div className="p-2">
+                                            <Link
+                                                to={{
+                                                    pathname: "/account/update-password",
+                                                    search: `?id=${user?._id}`
+                                                }}
+                                                className="flex items-center gap-3 w-full px-3 py-2.5 text-sm text-gray-600 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors group"
+                                            >
+                                                <TbLockPassword className="text-xl text-gray-400 group-hover:text-blue-500" />
+                                                <span className="font-medium">Update Password</span>
+                                            </Link>
+                                            <hr className="my-2 border-gray-100" />
+                                            <Link to="/signin"
+                                                onClick={() => { signOut() }}
+                                                className="flex items-center gap-3 w-full px-3 py-2.5 text-sm text-red-500 rounded-lg hover:bg-red-50 transition-colors group"
+                                            >
+                                                <TbLogout className="text-xl text-red-400 group-hover:text-red-600" />
+                                                <span className="font-medium">Logout</span>
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
                         ) : (
                             <Link to="/signin" className="login-btn hidden md:block">
                                 Login
                             </Link>
                         )}
+
+
+
+                        {/* toggle button for mobile view */}
                         <button onClick={toggleMenu} className="md:hidden flex flex-col justify-center items-center w-8 h-8">
                             <span className={`block w-6 h-0.5 bg-black transition-transform duration-300 ${isMenuOpen ? 'rotate-45 translate-y-1' : '-translate-y-1'}`}></span>
                             <span className={`block w-6 h-0.5 bg-black transition-opacity duration-300 ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`}></span>

@@ -30,9 +30,13 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 ;
                 return false;
             }
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
-            toast.error("Sign in failed");;
+            if (error?.response?.status === 400) {
+                toast.error("Invalid email or password");
+                return false;
+            }
+            toast.error("Sign in failed");
             return false;
         }
     }

@@ -21,15 +21,20 @@ const ProductProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const response = await axios.get<ApiResponse>(`${import.meta.env.VITE_API_BASE_URL}/product/get`)
-      setProducts(response.data.products)
-      if (response.status === 200) {
-        setLoading(false);
-      } else {
-        toast.error("Failed to fetch products", {
-          style: { background: '#dc2626', color: 'white' },
-        });
-        setLoading(false);
+      try {
+        const response = await axios.get<ApiResponse>(`${import.meta.env.VITE_API_BASE_URL}/product/get`)
+        if (response.status === 200) {
+          setLoading(false);
+          setProducts(response.data.products)
+        } else {
+          toast.error("Failed to fetch products", {
+            style: { background: '#dc2626', color: 'white' },
+          });
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+        setLoading(false)
       }
     }
     fetchProducts();

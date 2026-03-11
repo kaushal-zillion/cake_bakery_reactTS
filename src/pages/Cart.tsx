@@ -5,10 +5,11 @@ import { useCart } from "../context/CartProvider";
 import { useState } from "react";
 import type { ShippingDetails } from "../types/context.type";
 import toast from "react-hot-toast";
+import { ClipLoader } from "react-spinners";
 
 const Cart = () => {
 
-    const { cart, increaseQuantity, decreaseQuantity, removeFromCart, handleCheckout } = useCart();
+    const { cart, loading, increaseQuantity, decreaseQuantity, removeFromCart, handleCheckout } = useCart();
     const [modalOpen, setModalOpen] = useState(false);
     const [shipping, setShipping] = useState<ShippingDetails>({
         address: '',
@@ -56,7 +57,7 @@ const Cart = () => {
                             {/* cart items */}
                             <div className="xl:w-8/12 w-full px-4">
                                 <div className=" border border-gray-200 p-6 overflow-x-auto">
-                                    <table className="w-full ">
+                                    <table className="w-full min-w-[600px] md:min-w-full">
                                         <thead>
                                             <tr>
                                                 <th className="text-center"></th>
@@ -103,9 +104,11 @@ const Cart = () => {
                                         <p className="font-bold text-2xl">Total</p>
                                         <p className="font-bold text-2xl">${(cart.reduce((total, item) => total + (item.price * item.quantity), 0) + 5).toFixed(2)}</p>
                                     </div>
-                                    <button className="add-to-cart-btn w-full" onClick={() => setModalOpen(true)}>
-                                        <span className="relative z-10">Proceed to Checkout</span>
-                                    </button>
+                                    {loading ? (<div className="flex justify-center"><ClipLoader color="#c19b77" size={50} /></div>) : (
+                                        <button className="add-to-cart-btn w-full" onClick={() => setModalOpen(true)}>
+                                            <span className="relative z-10">Proceed to Checkout</span>
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>

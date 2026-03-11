@@ -53,12 +53,12 @@ const Home = () => {
                                 <div className="h-full">
                                     <h6 className="text-primary uppercase font-semibold">smart and simple</h6>
                                     <div className="flex h-full items-center mt-6">
-                                        <div className="w-full md:w-9/12 pe-4 h-full">
+                                        <div className="w-full lg:w-9/12 pe-4 h-full">
                                             <h2 className="text-4xl md:text-6xl font-serif font-semibold">Start building your future today</h2>
                                             <p className="text-gray-500 my-8">We believe in creating meaningful experiences through personalized service and attention to detail. Whether you’re seeking guidance or practical support, our staff is here to help you.</p>
                                             <button className="px-6 py-3 bg-primary text-white text-sm">SEE MORE</button>
                                         </div>
-                                        <div className="w-full md:w-3/12 ps-4 h-full">
+                                        <div className="w-3/12 lg:block hidden ps-4 h-full">
                                             <img width="100%" src="https://www.nicdarkthemes.com/bakery/wp-content/uploads/2025/06/ndimg-vertical-02.jpg" alt="cake" />
                                         </div>
                                     </div>
