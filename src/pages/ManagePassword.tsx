@@ -2,15 +2,17 @@ import axios from "axios";
 import { useState } from "react"
 import toast from "react-hot-toast"
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
 
 const ManagePassword = () => {
     const [input, setInput] = useState({ password: "", confirmPassword: "" })
-    const [searchParams] = useSearchParams();
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const userId = searchParams.get("id");
     const token = searchParams.get("reset_password_token");
 
-    console.log(userId, token);
+    // console.log(userId, token);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -25,6 +27,9 @@ const ManagePassword = () => {
             if (input.password !== input.confirmPassword) {
                 return toast.error("Passwords do not match");
             }
+
+            setLoading(true);
+
             try {
                 const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/resetPassword/password`, {
                     id: userId,
@@ -42,8 +47,11 @@ const ManagePassword = () => {
             } catch (error) {
                 console.log(error);
                 toast.error("An error occurred while resetting the password. Please try again.")
+            } finally {
+                setLoading(false);
             }
         } else if (userId) {
+            setLoading(true)
             try {
                 const res = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/user/update/password/${userId}`, { old_password: input.password, new_password: input.confirmPassword }, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
                 if (res.status === 200) {
@@ -56,6 +64,8 @@ const ManagePassword = () => {
             } catch (error) {
                 console.log(error);
                 toast.error("An error occurred while updating the password. Please try again.")
+            } finally {
+                setLoading(false);
             }
         }
 
@@ -75,11 +85,14 @@ const ManagePassword = () => {
                         <input value={input.confirmPassword} onChange={(e) => setInput({ ...input, confirmPassword: e.target.value })} type="password" name="confirmPassword" id="confirmPassword" placeholder="*****" />
                     </div>
                     <div>
-                        <button className="cart-btn">
-                            <span className="relative z-10">
-                                submit
-                            </span>
-                        </button>
+                        {loading ? (
+                            <div className="mt-2">
+                                <ClipLoader color="#c19b77" size={35} className="mx-auto" />
+                            </div>
+                        ) : (
+                            <button className="cart-btn">
+                                <span className="relative z-10">submit</span>
+                            </button>)}
                     </div>
                 </form>
             </div>

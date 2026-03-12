@@ -2,9 +2,11 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthProvider"
 import toast from "react-hot-toast"
+import { ClipLoader } from "react-spinners"
 
 const Signup = () => {
     const [input, setInput] = useState({ name: "", email: "", password: "" })
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate()
     const { signUp } = useAuth()
 
@@ -13,9 +15,10 @@ const Signup = () => {
         if (Object.values(input).some((val) => val.trim() === "")) {
             return toast.error("Please fill all the fields");
         }
-
+        setLoading(true)
         const success = await signUp(input.name, input.email, input.password)
         setInput({ name: "", email: "", password: "" })
+        setLoading(false)
         if (success) {
             navigate("/shop")
         }
@@ -39,11 +42,14 @@ const Signup = () => {
                         <input value={input.password} onChange={(e) => setInput({ ...input, password: e.target.value })} type="password" name="password" id="password" placeholder="*****" />
                     </div>
                     <div>
-                        <button className="cart-btn">
-                            <span className="relative z-10">
-                                submit
-                            </span>
-                        </button>
+                        {loading ? (
+                            <div className="mt-2">
+                                <ClipLoader color="#c19b77" size={35} className="mx-auto" />
+                            </div>
+                        ) : (
+                            <button className="cart-btn">
+                                <span className="relative z-10">submit</span>
+                            </button>)}
                     </div>
                     <div className="mt-5 text-gray-400">
                         <span>Don't have an account? <Link className="text-blue-500" to={"/signin"}>Sign in</Link></span>
